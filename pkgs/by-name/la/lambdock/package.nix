@@ -11,6 +11,9 @@
   xvfb-run,
   dbus,
   fontconfig,
+  hicolor-icon-theme,
+  adwaita-icon-theme,
+  gettext,
   gtk4,
   gtk4-layer-shell,
   guile,
@@ -21,7 +24,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "lambdock";
-  version = "0.6.7";
+  version = "0.10.10";
 
   strictDeps = true;
   __structuredAttrs = true;
@@ -30,13 +33,14 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "jjba23";
     repo = "lambdock";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-0Ca2twkV6lKdqlw5jp8/bzE5lBoGhR8zaECRRg2wWrY=";
+    hash = "sha256-oL+ED6ZzdfA4/njww0BvzpunGLJlLRQvDxGxAqeQMVg=";
   };
 
   nativeBuildInputs = [
     meson
     ninja
     pkg-config
+    gettext
     wayland-scanner
     glib
     wrapGAppsHook4
@@ -57,6 +61,8 @@ stdenv.mkDerivation (finalAttrs: {
     xvfb-run
     dbus
     fontconfig
+    hicolor-icon-theme
+    adwaita-icon-theme
   ];
 
   checkPhase = ''
@@ -66,10 +72,13 @@ stdenv.mkDerivation (finalAttrs: {
     export HOME=$TMPDIR
     export XDG_RUNTIME_DIR=$TMPDIR
     export FONTCONFIG_FILE=${fontconfig.out}/etc/fonts/fonts.conf
+    export XDG_DATA_DIRS=${hicolor-icon-theme}/share:${adwaita-icon-theme}/share
 
     # Disable accessibility bus queries and force GTK to use X11 under Xvfb
     export GTK_A11Y=none
     export GDK_BACKEND=x11
+    # No EGL under Xvfb: use the software renderer for the GTK window tests.
+    export GSK_RENDERER=cairo
 
     # Start DBus session bus
     dbus-daemon --config-file=${dbus}/share/dbus-1/session.conf --fork --print-address 5 5>dbus_address
