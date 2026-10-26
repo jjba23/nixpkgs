@@ -8,13 +8,13 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "guile-scriba";
-  version = "0.4.1";
+  version = "0.4.5";
 
   src = fetchFromCodeberg {
     owner = "jjba23";
     repo = "scriba";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-RANg0gtwpKZT48QCtTn5QnVbkZSb6Xe6mD078FQT6IQ=";
+    hash = "sha256-ZbmlMXeAlnDyTjf4KTvGKwnjEOoXEycgVrLCUNHaBcA=";
   };
 
   strictDeps = true;
